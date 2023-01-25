@@ -1,0 +1,18 @@
+# user.graphql
+#o primeiro $ ta certo
+
+query FetchUser() { user(login: String) {
+type: type 
+login: login
+bioHTML: bioHTML  
+avatarUrl: avatarUrl
+repositories{   
+  edges{
+node{     
+  description: description
+name: name     
+ }
+}
+}
+}
+}

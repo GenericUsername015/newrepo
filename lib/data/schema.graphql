@@ -1,0 +1,24 @@
+# schema.graphql
+
+
+type Query { user(login: String): User
+}
+type Node {  description: String
+name: String}
+
+type Edges {
+node: Node}
+
+type Repositories {
+edges:[Edges]}
+
+type User {
+type: String  login: String
+bioHTML:String
+avatarUrl: String 
+repositories: Repositories
+}
+scalar ISODateTime
+scalar URL
+
+scalar URL
