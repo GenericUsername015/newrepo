@@ -6,31 +6,31 @@ import 'package:teste/repository/user_repository.dart';
 import 'package:teste/data/user.graphql.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
-
 class UserInformationBloc
     extends Bloc<UserInformationEvent, UserInformationState> {
   final _userRepo = UserRepository();
+  final String login;
 
-  UserInformationBloc() : super(InformationInitialState()) {
-    on<IsLoadingInformationEvent>((event, emit) {
-      emit(LoadingState(
-          user: UserInformationModel(
-              name: '', bio: '', avatarUrl: '', repositories: []),
-          isLoading: true));
-    });
+  UserInformationBloc(this.login) : super(LoadingState()) {
+    // on<IsLoadingInformationEvent>((event, emit) {
+    //   emit(LoadingState(
+    //       user: UserInformationModel(
+    //           name: '', bio: '', avatarUrl: '', repositories: []),
+    //       isLoading: true));
+    // });
 
     on<LoadUserInformationEvent>((event, emit) async {
       try {
         final HttpLink httpLink = HttpLink('https://api.github.com/graphql');
         final AuthLink authLink = AuthLink(
           getToken: () async =>
-              'Bearer ',
+              'Bearer ghp_',
         );
 
         final Link link = authLink.concat(httpLink);
         GraphQLClient qlClient = GraphQLClient(
           link: link,
-         cache: GraphQLCache(
+          cache: GraphQLCache(
             store: HiveStore(),
           ),
         );
@@ -38,8 +38,8 @@ class UserInformationBloc
         QueryResult queryResultOnBloc = await qlClient.query(
           QueryOptions(
             document: gql(
-              """query {
-user(login: "GenericUsername015") { 
+              '''query {
+user(login: "$login") { 
    login
 avatarUrl  
 bioHTML
@@ -52,12 +52,13 @@ name
 }   
 }
 }   
-}""",
+}''',
             ),
           ),
         );
 
         if (queryResultOnBloc.data != null) {
+          print(queryResultOnBloc.data);
           final parsedData = Query$FetchUser.fromJson(
               queryResultOnBloc.data as Map<String, dynamic>);
           List<String> repos = [];
@@ -85,10 +86,7 @@ name
         }
       } catch (error) {
         print(error);
-        emit(LoadingState(
-            user: UserInformationModel(
-                name: '', bio: '', avatarUrl: '', repositories: []),
-            isLoading: false));
+        emit(ErrorState());
       }
     });
   }

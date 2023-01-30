@@ -1,10 +1,14 @@
+import 'package:flutter/material.dart';
 import 'package:teste/models/user_information_model.dart';
 
 abstract class UserInformationState {
   UserInformationModel user;
   var isLoading;
 
-  UserInformationState({required this.user, this.isLoading = false});
+  UserInformationState(
+      {this.user = const UserInformationModel(
+          name: '', bio: '', avatarUrl: '', repositories: []),
+      this.isLoading = false});
 }
 
 class InformationInitialState extends UserInformationState {
@@ -14,12 +18,21 @@ class InformationInitialState extends UserInformationState {
                 name: '', bio: '', avatarUrl: '', repositories: []));
 }
 
+class SearchEmptyState extends UserInformationState {
+  SearchEmptyState({required super.user, super.isLoading});
+}
+
 class InformationSuccessState extends UserInformationState {
   InformationSuccessState({required super.user, super.isLoading});
 }
 
 class LoadingState extends UserInformationState {
-  LoadingState({required super.user, super.isLoading});
+  LoadingState();
+}
+
+class ErrorState extends UserInformationState {
+  var errorMessage;
+  ErrorState({this.errorMessage});
 }
 
 class LoadedState extends UserInformationState {

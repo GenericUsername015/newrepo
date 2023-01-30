@@ -67,7 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     getName();
-    bloc = UserInformationBloc();
+    bloc = UserInformationBloc('');
     var is_loading = true;
   }
 
@@ -89,7 +89,7 @@ class _MyHomePageState extends State<MyHomePage> {
             bloc: bloc,
             builder: (context, state) {
               print('IMPRIME STATE');
-              
+
               return Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: Column(
@@ -99,10 +99,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       // mostrar o texto
 
                       Container(
-                        color: Colors.lightBlue,
                         child: Center(
                           child: nameValue == null
-                              ? Text('Nenhum nome disponivel')
+                              ? Text('Digite o login:')
                               : (Text(nameValue!)),
                         ),
                       ),
@@ -121,21 +120,15 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       MaterialButton(
                           onPressed: () async {
-                            bloc.add(IsLoadingInformationEvent());
-                           bloc.add(LoadUserInformationEvent());
-print (state.user.bio);
+                            //   bloc.add(IsLoadingInformationEvent());
+                            //  bloc.add(LoadUserInformationEvent());
 
-                           
-
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //       builder: (context) => SecondRoute(
-                            //           username: "GenericUsername015",
-                            //           bioHTML: state.user.bio,
-                            //           avatarUrl: state.user.avatarUrl,
-                            //           repo: theRepository)),
-                            // );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => UserInformationPage(
+                                      login: textController.text)),
+                            );
                           }, // termina o async
                           color: Colors.green,
                           child: const Text('fetch',
@@ -147,88 +140,3 @@ print (state.user.bio);
     // body: );
   }
 }
-
-// SECOND ROOOOOOOOOOUTE
-
-class SecondRoute extends StatelessWidget {
-  // @override
-  // void dispose() {
-  //   bloc.close();
-  //   super.dispose();
-  // }
-  final String username;
-  final String bioHTML;
-  final String avatarUrl;
-  final List<String> repo;
-
-  const SecondRoute(
-      {Key? key,
-      required this.username,
-      required this.bioHTML,
-      required this.avatarUrl,
-      required this.repo})
-      : super(key: key);
-
-// se tivesse um botao aqui seria no onPressed: () { bloc.inputCliuent.add(AddClientEvent(client etc etc))}
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Second Route'),
-      ),
-      body: Center(
-        child: Column(
-          children: [
-            Container(
-              child: Image.network(avatarUrl, height: 200),
-              padding: const EdgeInsets.all(35),
-            ),
-            (Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Username:',
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                      wordSpacing: 5),
-                ),
-                Text(
-                  username,
-                  style: const TextStyle(fontSize: 15),
-                ),
-                SizedBox(height: 10),
-                Text(
-                  'Bio:',
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 20),
-                ),
-                Text(
-                  bioHTML,
-                  style: const TextStyle(fontSize: 15),
-                )
-              ],
-            )),
-            // ListView.builder(
-            //   shrinkWrap: true,
-            //   itemCount: repo.length,
-            //   prototypeItem: ListTile(
-            //     title: Text(repo.first),
-            //   ),
-            //   itemBuilder: (context, index) {
-            //     return Card(
-            //         child: ListTile(
-            //       hoverColor: Colors.lightBlue,
-            //       title: Text(repo[index]),
-            //     ));
-            //   },
-            // ),
-          ],
-        ),
-      ),
-      //
-    );
-  }
-}
-
-//==================================================================
